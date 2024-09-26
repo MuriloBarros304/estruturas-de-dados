@@ -43,7 +43,7 @@ func (l *ArrayList) Size() int{
 func (l *ArrayList) Get(index int) (int,error){
     if index>=0 && index < l.inserted {
         return l.v[index], nil
-    } else{
+    } else {
         return index, errors.New("Index fora dos limites da lista") 
     }
 }
@@ -56,7 +56,7 @@ func (l *ArrayList) Add(e int) {
     l.inserted++
 }
 
-func (l *ArrayList) AddOnIndex(e int, index int)  error {
+func (l *ArrayList) AddOnIndex(e int, index int) error {
     if index>=0 && index <= l.inserted {
         if l.inserted == len(l.v) {
             l.doubleV()
@@ -97,6 +97,8 @@ func main(){
     l.Add(8)
     l.Add(9)
     l.Add(10)
-    //l.AddOnIndex(0,0)
-    //vetor lotado
+    l.AddOnIndex(0,0)
+    l.Remove(4)
+    fmt.Println(l)
     //l.AddOnIndex(-1,0)
+}
