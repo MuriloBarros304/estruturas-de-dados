@@ -16,6 +16,7 @@ type List interface {
 type Node struct {
     v int
     next *Node
+    prev *Node
 }
 
 type LinkedList struct {
@@ -42,7 +43,18 @@ func (l *LinkedList) Get(index int) (int, error){
 }
 
 func (l *LinkedList) Add(e int) {
-    l.AddOnIndex(e, l.inserted)
+    newNode := &Node{v:e} // Cria um novo nó
+    aux := l.head
+    if aux == nil {
+        l.head = newNode
+    } else {
+        aux := l.head
+        for aux.next != nil {
+            aux = aux.next
+        }
+        aux.next = newNode
+    }
+    l.inserted++
 }
 
 func (l *LinkedList) AddOnIndex(e int, index int) error {
@@ -95,12 +107,9 @@ func main(){
     l.Add(8)
     l.Add(9)
     l.Add(10)
-    l.AddOnIndex(0,3)
+    l.AddOnIndex(0,0)
     l.Remove(4)
     //fmt.Println(l.Get(2))
     fmt.Println(l)
-    for i := 0; i < l.Size(); i++ {
-        fmt.Println(l.Get(i))
-    }
     //l.AddOnIndex(-1,0)
 }
