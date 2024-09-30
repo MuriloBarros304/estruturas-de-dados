@@ -21,6 +21,7 @@ type Node struct {
 
 type LinkedList struct {
     head *Node
+    tail *Node
     inserted int
 }
 
@@ -95,21 +96,17 @@ func (l *LinkedList) Remove(index int) error {
         return errors.New("Index invalido")
     } 
 }
+
 func main(){
     l := &LinkedList{}
-    l.Add(1)
-    l.Add(2)
-    l.Add(3)
-    l.Add(4)
-    l.Add(5)
-    l.Add(6)
-    l.Add(7)
-    l.Add(8)
-    l.Add(9)
-    l.Add(10)
-    l.AddOnIndex(0,0)
+    for i := 0; i < 10; i++ {
+        l.Add(i)
+    }
+    l.AddOnIndex(15,0)
     l.Remove(4)
     //fmt.Println(l.Get(2))
-    fmt.Println(l)
+    for i := 0; i < l.Size(); i++ {
+        fmt.Println(l.Get(i))
+    }
     //l.AddOnIndex(-1,0)
 }
