@@ -32,12 +32,10 @@ func (l *LinkedList) Size() int {
 func (l *LinkedList) Get(index int) (int, error){
     if index>=0 && index < l.inserted {
         aux := l.head
-
         for i := 0; i < index; i++ {
             aux = aux.next
         }
         return aux.v, nil
-
     } else {
         return index, errors.New("Index fora dos limites da lista") 
     }
@@ -46,14 +44,18 @@ func (l *LinkedList) Get(index int) (int, error){
 func (l *LinkedList) Add(e int) {
     newNode := &Node{v:e} // Cria um novo nó
     aux := l.head
+    prev := aux
     if aux == nil {
         l.head = newNode
+        l.tail = newNode
     } else {
         aux := l.head
         for aux.next != nil {
+            prev = aux
             aux = aux.next
         }
         aux.next = newNode
+        newNode.prev = prev
     }
     l.inserted++
 }
@@ -63,13 +65,20 @@ func (l *LinkedList) AddOnIndex(e int, index int) error {
         newNode := &Node{v:e}
         if l.head == nil {
             l.head = newNode
+            l.tail = newNode
         } else {
             aux := l.head
             for i := 0; i < index - 1; i++ {
                 aux = aux.next
             }
             newNode.next = aux.next
+            newNode.prev = aux
             aux.next = newNode
+            if newNode.next != nil {
+                newNode.next.prev = newNode
+            } else {
+                l.tail = newNode
+            }
         }
         l.inserted++
         return nil
@@ -88,6 +97,7 @@ func (l *LinkedList) Remove(index int) error {
                 aux = aux.next
             }
             aux.next = aux.next.next
+            aux.next.prev = aux
         }
 
         l.inserted--
