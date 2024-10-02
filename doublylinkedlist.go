@@ -42,30 +42,29 @@ func (l *LinkedList) Get(index int) (int, error){
 }
 
 func (l *LinkedList) Add(e int) {
-    newNode := &Node{v:e} // Cria um novo nó
-    aux := l.head
-    prev := aux
-    if aux == nil {
+    newNode := &Node{v:e} // cria um novo nó
+    if l.head == nil { // verifica se a lista é vazia
         l.head = newNode
-        l.tail = newNode
     } else {
-        aux := l.head
-        for aux.next != nil {
-            prev = aux
-            aux = aux.next
-        }
-        aux.next = newNode
-        newNode.prev = prev
+        l.tail.next = newNode
+        newNode.prev = l.tail // ajustar prev de newnode
     }
+    l.tail = newNode
     l.inserted++
 }
 
-func (l *LinkedList) AddOnIndex(e int, index int) error {
+func (l *LinkedList) AddOnIndex(e int, index int) error { // verificar inserção no índice 0
     if index >= 0 && index <= l.inserted {
         newNode := &Node{v:e}
-        if l.head == nil {
-            l.head = newNode
-            l.tail = newNode
+        if index == 0 { // se for uma inserção no início
+            if l.head == nil {
+                l.head = newNode
+                l.tail = newNode
+            } else {
+                newNode.next = l.head
+                l.head.prev = newNode
+                l.head = newNode
+            }
         } else {
             aux := l.head
             for i := 0; i < index - 1; i++ {
@@ -74,14 +73,14 @@ func (l *LinkedList) AddOnIndex(e int, index int) error {
             newNode.next = aux.next
             newNode.prev = aux
             aux.next = newNode
-            if newNode.next != nil {
-                newNode.next.prev = newNode
-            } else {
-                l.tail = newNode
+            if newNode.next != nil { // se não estiver no final da lista
+                newNode.next.prev = newNode // o anterior do próximo vai ser o novo nó
+            } else { // se estiver no final
+                l.tail = newNode // atualizar tail para o novo nó
             }
         }
-        l.inserted++
-        return nil
+    l.inserted++
+    return nil
     } else {
         return errors.New("Index invalido") 
     }
@@ -99,7 +98,6 @@ func (l *LinkedList) Remove(index int) error {
             aux.next = aux.next.next
             aux.next.prev = aux
         }
-
         l.inserted--
         return nil
     } else {
@@ -109,11 +107,12 @@ func (l *LinkedList) Remove(index int) error {
 
 func main(){
     l := &LinkedList{}
-    for i := 0; i < 10; i++ {
+    for i := 0; i < 6; i++ {
         l.Add(i)
     }
     l.AddOnIndex(15,0)
-    l.Remove(4)
+    l.AddOnIndex(6,3)
+    //l.Remove(4)
     //fmt.Println(l.Get(2))
     for i := 0; i < l.Size(); i++ {
         fmt.Println(l.Get(i))

@@ -41,28 +41,33 @@ func (l *LinkedList) Get(index int) (int, error){
     }
 }
 
-func (l *LinkedList) Add(e int) {
-    l.AddOnIndex(e, l.inserted)
-}
-
 func (l *LinkedList) AddOnIndex(e int, index int) error {
     if index >= 0 && index <= l.inserted {
         newNode := &Node{v:e}
         if l.head == nil {
             l.head = newNode
         } else {
-            aux := l.head
-            for i := 0; i < index - 1; i++ {
-                aux = aux.next
+            if index == 0 {
+                newNode.next = l.head
+                l.head = newNode
+            } else {
+                aux := l.head
+                for i := 0; i < index - 1; i++ {
+                    aux = aux.next
+                }
+                newNode.next = aux.next
+                aux.next = newNode
             }
-            newNode.next = aux.next
-            aux.next = newNode
         }
         l.inserted++
         return nil
     } else {
         return errors.New("Index invalido") 
     }
+}
+
+func (l *LinkedList) Add(e int) {
+    l.AddOnIndex(e, l.inserted)
 }
 
 func (l *LinkedList) Remove(index int) error {
@@ -95,6 +100,7 @@ func main(){
     l.Add(8)
     l.Add(9)
     l.Add(10)
+    l.AddOnIndex(4,0)
     l.AddOnIndex(0,3)
     l.Remove(4)
     //fmt.Println(l.Get(2))
