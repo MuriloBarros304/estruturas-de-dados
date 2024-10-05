@@ -53,7 +53,7 @@ func (l *LinkedList) Add(e int) {
     l.inserted++
 }
 
-func (l *LinkedList) AddOnIndex(e int, index int) error { // verificar inserção no índice 0
+func (l *LinkedList) AddOnIndex(e int, index int) error {
     if index >= 0 && index <= l.inserted {
         newNode := &Node{v:e}
         if index == 0 { // se for uma inserção no início
