@@ -27,6 +27,7 @@ func (s *LinkedStack) Size() int {
 }
 
 func (s *LinkedStack) Push(e int) {
+    // criar novo nó, atualizar próximo, atualizar topo
     newNode := &Node{v:e}
     if s.top != nil {
         newNode.next = s.top
@@ -36,6 +37,7 @@ func (s *LinkedStack) Push(e int) {
 }
 
 func (s *LinkedStack) Pop() (int, error) {
+    // fazer o topo apontar pro próximo
     if s.top != nil {
         s.inserted--
         val := s.top.v
