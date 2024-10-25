@@ -4,8 +4,14 @@ import (
     "fmt"
     "errors"
 )
-
-type List interface {
+// Lista
+/*
+As listas são estruturas de dados que armazenam uma coleção de elementos,
+o acesso aos elementos é feito através de índices, que são inteiros que
+representam a posição do elemento na lista. As listas podem ser implementadas
+de várias formas, como arrays, linked lists, doubly linked lists, etc.
+*/
+type List interface { // tipo abstrato de dados
     Size() int
     Get(index int) (int,error)
     Add(e int) 
@@ -13,56 +19,56 @@ type List interface {
     Remove(index int) error
 }
 
-type ArrayList struct {
+type ArrayList struct { // estrutura de dados
     v []int
     inserted int
 }
 
-func (l *ArrayList) Init(size int) error {
+func (l *ArrayList) Init(size int) error { // inicializa a lista, fazendo a alocação de memória
     if size > 0 {
         l.v = make([]int, size)
         return nil
     } else {
-        return errors.New("Size <= 0")
+        return errors.New("Size <= 0") // caso o tamanho seja menor ou igual a zero
     }
 }
 
-func (l *ArrayList) doubleV() {
+func (l *ArrayList) doubleV() { // duplica o tamanho do vetor
     newSize := len(l.v)*2
     newV := make([]int, newSize)
     for i:=0; i < len(l.v); i++ {
-        newV[i] = l.v[i]
+        newV[i] = l.v[i]        // complexidade O(n), Omega(1)
     } 
     l.v = newV
 }
 
-func (l *ArrayList) Size() int{
+func (l *ArrayList) Size() int{ // O(1) Omega(1)
     return l.inserted
 }
 
-func (l *ArrayList) Get(index int) (int,error){
-    if index>=0 && index < l.inserted {
-        return l.v[index], nil
+func (l *ArrayList) Get(index int) (int,error){ // O(1) Omega(1)
+    if index>=0 && index < l.inserted {         // proteção para index fora dos limites da lista
+        return l.v[index], nil                  // retorna o elemento na posição index
     } else {
         return index, errors.New("Index fora dos limites da lista") 
     }
 }
 
-func (l *ArrayList) Add(e int) {
-    if l.inserted == len(l.v) {
+func (l *ArrayList) Add(e int) { // O(n) Omega(1)
+    if l.inserted == len(l.v) {  // se o vetor está cheio, dobra o tamanho, no melhor caso o tamanho não é alterado
         l.doubleV()
     }
     l.v[l.inserted] = e
     l.inserted++
 }
 
-func (l *ArrayList) AddOnIndex(e int, index int) error {
+func (l *ArrayList) AddOnIndex(e int, index int) error { // O(n) Omega(1)
     if index>=0 && index <= l.inserted {
-        if l.inserted == len(l.v) {
+        if l.inserted == len(l.v) {                      // se o vetor está cheio
             l.doubleV()
         }
-        for i:=l.inserted; i > index; i--{
-            l.v[i] = l.v[i-1]
+        for i:=l.inserted; i > index; i--{ // i vai do último elemento até o index, movendo os elementos para a direita
+            l.v[i] = l.v[i-1]              // para abrir espaço para o novo elemento
         }
 
         l.v[index] = e
@@ -72,40 +78,39 @@ func (l *ArrayList) AddOnIndex(e int, index int) error {
     return errors.New("Index invalido") 
 }
 
-func (l *ArrayList) Remove(index int)  error {
+func (l *ArrayList) Remove(index int)  error { // O(n) Omega(1)
     if index>=0 && index < l.inserted {
         for i:=index; i < l.inserted-1; i++{
-            l.v[i] = l.v[i+1]
-        }
-
+            l.v[i] = l.v[i+1] // i vai do index até o penúltimo elemento, movendo os elementos para a esquerda
+        }                     // para preencher o espaço do elemento removido, fechando o espaço
         l.inserted--
         return nil
     }
     return errors.New("Index invalido") 
 }
 
-// doubly Linked List
-type Node struct {
-    v int
-    next *Node
-    prev *Node
+// doubly Linked List -----------------------------------------------------------------------------------
+type Node struct { // nó da lista duplamente encadeada
+    v int          // elemento do nó
+    next *Node     // ponteiro para o próximo nó
+    prev *Node     // ponteiro para o nó anterior
 }
 
-type LinkedList struct {
-    head *Node
-    tail *Node
-    inserted int
+type LinkedList struct { // estrutura de dados do tipo abstrato de dados: lista
+    head *Node           // ponteiro para o primeiro nó
+    tail *Node           // ponteiro para o último nó
+    inserted int         // quantidade de elementos na lista
 }
 
-func (l *LinkedList) Size() int {
-    return l.inserted
+func (l *LinkedList) Size() int { // O(1) Omega(1)
+    return l.inserted             // retorna a quantidade de elementos na lista
 }
 
-func (l *LinkedList) Get(index int) (int, error){
-    if index>=0 && index < l.inserted {
-        aux := l.head
-        for i := 0; i < index; i++ {
-            aux = aux.next
+func (l *LinkedList) Get(index int) (int, error){ // O(n) Omega(1)
+    if index>=0 && index < l.inserted { // proteção para index fora dos limites da lista
+        aux := l.head                   // auxiliar para percorrer a lista
+        for i := 0; i < index; i++ {    // percorre a lista até o index, por isso a complexidade O(n)
+            aux = aux.next              // primeiro a cabeça recebe o próximo
         }
         return aux.v, nil
     } else {
@@ -113,42 +118,42 @@ func (l *LinkedList) Get(index int) (int, error){
     }
 }
 
-func (l *LinkedList) Add(e int) {
-    newNode := &Node{v:e} // cria um novo nó
-    if l.head == nil { // verifica se a lista é vazia
-        l.head = newNode
-    } else {
-        l.tail.next = newNode
-        newNode.prev = l.tail // ajustar prev de newnode
+func (l *LinkedList) Add(e int) { // O(1) Omega(1)
+    newNode := &Node{v:e}     // instancia um novo nó
+    if l.head == nil {        // verifica se a lista é vazia
+        l.head = newNode      // se for, o novo nó é a cabeça
+    } else {                  // se não for vazia
+        l.tail.next = newNode // a cauda aponta para o novo nó, 
+        newNode.prev = l.tail // ajustar prev de newnode para a antiga cauda
     }
-    l.tail = newNode
+    l.tail = newNode          // atualiza a cauda para o novo nó
     l.inserted++
 }
 
-func (l *LinkedList) AddOnIndex(e int, index int) error {
-    if index >= 0 && index <= l.inserted {
-        newNode := &Node{v:e}
-        if index == 0 { // se for uma inserção no início
-            if l.head == nil {
-                l.head = newNode
-                l.tail = newNode
-            } else {
-                newNode.next = l.head
-                l.head.prev = newNode
-                l.head = newNode
+func (l *LinkedList) AddOnIndex(e int, index int) error { // O(n) Omega(1)
+    if index >= 0 && index <= l.inserted {  // proteção para index fora dos limites da lista
+        newNode := &Node{v:e}               // instancia um novo nó
+        if index == 0 {                     // se for uma inserção no início
+            if l.head == nil {              // se a lista for vazia
+                l.head = newNode            // o novo nó é a cabeça
+                l.tail = newNode            // e a cauda, pois só tem um elemento
+            } else {                        // se não for vazia
+                newNode.next = l.head       // o próximo do novo nó é a cabeça
+                l.head.prev = newNode       // o anterior da cabeça é o novo nó
+                l.head = newNode            // a cabeça é o novo nó, já que a adição é no início
             }
-        } else {
-            aux := l.head
-            for i := 0; i < index - 1; i++ {
-                aux = aux.next
+        } else {                            // se não for no início
+            aux := l.head                   // auxiliar para percorrer a lista
+            for i := 0; i < index - 1; i++ {// percorre a lista até o index - 1, uma posição antes do index
+                aux = aux.next              
             }
-            newNode.next = aux.next
-            newNode.prev = aux
-            aux.next = newNode
-            if newNode.next != nil { // se não estiver no final da lista
+            newNode.next = aux.next         // o próximo do novo nó é o próximo do auxiliar
+            newNode.prev = aux              // o anterior do novo nó é o auxiliar
+            aux.next = newNode              // o próximo do auxiliar é o novo nó
+            if newNode.next != nil {        // se não estiver no final da lista
                 newNode.next.prev = newNode // o anterior do próximo vai ser o novo nó
-            } else { // se estiver no final
-                l.tail = newNode // atualizar tail para o novo nó
+            } else {                        // se estiver no final
+                l.tail = newNode            // atualizar tail para o novo nó
             }
         }
     l.inserted++
@@ -158,17 +163,17 @@ func (l *LinkedList) AddOnIndex(e int, index int) error {
     }
 }
 
-func (l *LinkedList) Remove(index int) error {
+func (l *LinkedList) Remove(index int) error { // O(n) Omega(1)
     if index >= 0 && index < l.inserted {
-        if index == 0 {
-            l.head = l.head.next
-        } else {
-            aux := l.head
+        if index == 0 {                   // se for a remoção do início
+            l.head = l.head.next          // a cabeça recebe o próximo
+        } else {                          // se não for do início
+            aux := l.head                 // auxiliar para percorrer a lista
             for i := 0; i < index - 1; i++ {
                 aux = aux.next
             }
-            aux.next = aux.next.next
-            aux.next.prev = aux
+            aux.next = aux.next.next      // o próximo do auxiliar é o próximo do próximo, removendo o elemento
+            aux.next.prev = aux           // o anterior do próximo do auxiliar é o auxiliar
         }
         l.inserted--
         return nil
@@ -179,8 +184,8 @@ func (l *LinkedList) Remove(index int) error {
 
 // linked list 
 type Node struct {
-    v int
-    next *Node
+    v int      // elemento do nó
+    next *Node // ponteiro para o próximo nó
 }
 
 type LinkedList struct {
