@@ -183,26 +183,26 @@ func (l *LinkedList) Remove(index int) error { // O(n) Omega(1)
 }
 
 // linked list 
-type Node struct {
+type Node struct { // nó da lista encadeada (linked list)
     v int      // elemento do nó
     next *Node // ponteiro para o próximo nó
 }
 
-type LinkedList struct {
+type LinkedList struct { // estrutura de dados do tipo abstrato de dados: lista
     head *Node
     inserted int
 }
 
-func (l *LinkedList) Size() int {
-    return l.inserted
+func (l *LinkedList) Size() int { // O(1) Omega(1)
+    return l.inserted // retorna a quantidade de elementos na lista
 }
 
-func (l *LinkedList) Get(index int) (int, error){
-    if index>=0 && index < l.inserted {
-        aux := l.head
+func (l *LinkedList) Get(index int) (int, error){ // O(n) Omega(1)
+    if index>=0 && index < l.inserted {    // proteção para index fora dos limites da lista
+        aux := l.head                      // auxiliar para percorrer a lista, sempre começa pela cabeça e vai até o index
 
-        for i := 0; i < index; i++ {
-            aux = aux.next
+        for i := 0; i < index; i++ {       // percorre a lista até o index, por isso a complexidade O(n)
+            aux = aux.next                 // recebe o próximo nó
         }
         return aux.v, nil
 
@@ -211,22 +211,22 @@ func (l *LinkedList) Get(index int) (int, error){
     }
 }
 
-func (l *LinkedList) AddOnIndex(e int, index int) error {
+func (l *LinkedList) AddOnIndex(e int, index int) error { // O(n) Omega(1)
     if index >= 0 && index <= l.inserted {
-        newNode := &Node{v:e}
-        if l.head == nil {
-            l.head = newNode
-        } else {
-            if index == 0 {
-                newNode.next = l.head
-                l.head = newNode
-            } else {
-                aux := l.head
-                for i := 0; i < index - 1; i++ {
-                    aux = aux.next
+        newNode := &Node{v:e}          // instancia um novo nó
+        if l.head == nil {             // se a lista for vazia
+            l.head = newNode           // a cabeça recebe o novo nó
+        } else {                       // se não for vazia
+            if index == 0 {            // se for uma inserção no início
+                newNode.next = l.head  // o próximo do novo nó é a cabeça
+                l.head = newNode       // a cabeça é o novo nó
+            } else {                   // se a inserção não for no início
+                aux := l.head          // auxiliar para percorrer a lista
+                for i := 0; i < index - 1; i++ { // percorre a lista até o index - 1, uma posição antes do index
+                    aux = aux.next     // recebe o próximo nó
                 }
-                newNode.next = aux.next
-                aux.next = newNode
+                newNode.next = aux.next // o próximo do novo nó é o próximo do auxiliar, guardando a referência
+                aux.next = newNode      // o próximo do auxiliar é o novo nó, inserindo o novo nó
             }
         }
         l.inserted++
@@ -236,20 +236,20 @@ func (l *LinkedList) AddOnIndex(e int, index int) error {
     }
 }
 
-func (l *LinkedList) Add(e int) {
-    l.AddOnIndex(e, l.inserted)
+func (l *LinkedList) Add(e int) { // O(n) Omega(1)
+    l.AddOnIndex(e, l.inserted)   // adiciona o elemento no final da lista
 }
 
-func (l *LinkedList) Remove(index int) error {
+func (l *LinkedList) Remove(index int) error { // O(n) Omega(1)
     if index >= 0 && index < l.inserted {
-        if index == 0 {
-            l.head = l.head.next
-        } else {
-            aux := l.head
-            for i := 0; i < index - 1; i++ {
-                aux = aux.next
+        if index == 0 {                       // se a remoção for no início
+            l.head = l.head.next              // a cabeça recebe o próximo
+        } else {                              // se não for no início
+            aux := l.head                     // auxiliar para percorrer a lista
+            for i := 0; i < index - 1; i++ {  // percorre a lista até o index - 1, uma posição antes do index
+                aux = aux.next                // recebe o próximo nó
             }
-            aux.next = aux.next.next
+            aux.next = aux.next.next          // o próximo do auxiliar é o próximo do próximo, removendo o elemento
         }
 
         l.inserted--
