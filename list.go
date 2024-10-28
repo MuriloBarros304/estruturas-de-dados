@@ -167,21 +167,31 @@ func (l *LinkedList) Remove(index int) error { // O(n) Omega(1)
     if index >= 0 && index < l.inserted {
         if index == 0 {                   // se for a remoção do início
             l.head = l.head.next          // a cabeça recebe o próximo
+            if l.head != nil {
+                l.head.prev = nil         // se a lista não estiver vazia após a remoção, o prev da nova cabeça é nil
+            } else {
+                l.tail = nil              // se a lista estiver vazia, a cauda também é nil
+            }
         } else {                          // se não for do início
             aux := l.head                 // auxiliar para percorrer a lista
-            for i := 0; i < index - 1; i++ {
+            for i := 0; i < index-1; i++ {
                 aux = aux.next
             }
-            aux.next = aux.next.next      // o próximo do auxiliar é o próximo do próximo, removendo o elemento
-            aux.next.prev = aux           // o anterior do próximo do auxiliar é o auxiliar
+            toRemove := aux.next
+            aux.next = toRemove.next      // o próximo do auxiliar é o próximo do próximo, removendo o elemento
+            if toRemove.next != nil {     // se não for o último elemento
+                toRemove.next.prev = aux  // o anterior do próximo do próximo é o auxiliar
+            } else {
+                l.tail = aux              // se for o último elemento, atualiza a cauda
+            }
         }
         l.inserted--
         return nil
-    } else {
-        return errors.New("Index invalido")
-    } 
+    }
+    return errors.New("Index invalido")
 }
 
+/*
 // linked list 
 type Node struct { // nó da lista encadeada (linked list)
     v int      // elemento do nó
@@ -258,11 +268,11 @@ func (l *LinkedList) Remove(index int) error { // O(n) Omega(1)
         return errors.New("Index invalido")
     } 
 }
-
+*/
 // main
 func main(){
-    l := &ArrayList{}
-    l.Init(10)
+    l := &LinkedList{}
+    //l.Init(10)
     l.Add(1)
     l.Add(2)
     l.Add(3)
@@ -274,7 +284,10 @@ func main(){
     l.Add(9)
     l.Add(10)
     l.AddOnIndex(0,0)
-    l.Remove(4)
-    fmt.Println(l)
+    l.Remove(9)
+    for i:=0; i<10; i++ {
+        val, _ := l.Get(i)
+        fmt.Println(val)
+    }
     //l.AddOnIndex(-1,0)
 }

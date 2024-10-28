@@ -37,7 +37,7 @@ func (s *LinkedStack) Push(e int) { // O(1) Omega(1)
     if s.top != nil {        // se o topo não for nulo
         newNode.next = s.top // o próximo do novo nó é o topo, ou seja, o antigo topo é o próximo do novo nó
     }
-    s.top = newNode          // o topo agora é o novo nó
+    s.top = newNode          // o topo agora é o novo nó, funciona caso a pilha esteja vazia
     s.inserted++
 }
 
@@ -67,5 +67,12 @@ func main(){
     s.Push(4)
     s.Push(8)
     s.Push(12)    
-    fmt.Println(s.Top())
+    for i := 0; i < 5; i++ {
+        val, err := s.Pop()
+        if err != nil {
+            fmt.Println(err)
+        } else {
+            fmt.Println(val)
+        }
+    }
 }
