@@ -31,8 +31,8 @@ type ArrayDeque struct { // estrutura de dados, implementação de deque com arr
 
 func (q *ArrayDeque) Init(size int) error { // O(1) Omega(1)
     if size > 0 {
-    q.v = make([]int, size) // cria um array com o tamanho especificado, fazendo a alocação de memória
-        return nil
+        q.v = make([]int, size) // cria um array com o tamanho especificado, fazendo a alocação de memória
+            return nil
     } else {
         return errors.New("Size <= 0")
     }

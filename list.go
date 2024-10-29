@@ -191,7 +191,7 @@ func (l *LinkedList) Remove(index int) error { // O(n) Omega(1)
     return errors.New("Index invalido")
 }
 
-/*
+
 // linked list 
 type Node struct { // nó da lista encadeada (linked list)
     v int      // elemento do nó
@@ -268,7 +268,7 @@ func (l *LinkedList) Remove(index int) error { // O(n) Omega(1)
         return errors.New("Index invalido")
     } 
 }
-*/
+
 // main
 func main(){
     l := &LinkedList{}
