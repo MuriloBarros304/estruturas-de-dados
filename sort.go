@@ -55,12 +55,56 @@ func InsertionSort(v []int) { // O(n^2) Omega(n)
     }
 }
 
+func Merge(v []int , e []int, d []int) { // O(n) Omega(n)
+    indexE, indexD, indexV := 0, 0, 0
+    for indexE < len(e) && indexD < len(d) {
+        if e[indexE] < d[indexD] {
+            v[indexV] = e[indexE]
+            indexE++
+        } else {
+            v[indexV] = d[indexD]
+            indexD++
+        }
+        indexV++
+    }
+    for indexD < len(d) {
+        v[indexV] = d[indexD]
+        indexD++
+        indexV++
+    }
+    for indexE < len(e) {
+        v[indexV] = e[indexE]
+        indexE++
+        indexV++
+    }
+}
+
+func MergeSort(v []int) { // O(n log n) Omega(n log n)
+    if len(v) <= 1 {
+        tamE := len(v)/2
+        tamD := len(v) - tamE // restante do vetor
+        e := make([]int, tamE)
+        for i := 0; i < tamE; i++ {
+            e[i] = v[i]
+        }
+        d := make([]int, tamD)
+        for j := tamE; j < len(v); j++ {
+            d[j-tamE] = v[j]    // preenche o vetor da direita
+        }
+        MergeSort(e)
+        MergeSort(d)
+        Merge(v, e, d)
+    }
+}
+
 func main() {
+    //v := make([]int, 100)
     l := []int{5, 3, 4, 1, 2}
     fmt.Println(l)
-    sorted := SelectionSortOP(l)
-    fmt.Println(sorted)
+    MergeSort(l)
+    fmt.Println(l)
     //SelectionSortIP(l)
+    //MergeSort(l)
     //BubbleSort(l)
     //InsertionSort(l)
     //fmt.Println(l)
