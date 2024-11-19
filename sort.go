@@ -79,7 +79,7 @@ func Merge(v []int , e []int, d []int) { // O(n) Omega(n)
     }
 }
 
-func MergeSort(v []int) { // O(n log n) Omega(n log n)
+func MergeSort(v []int) { // O(n log n) Omega(n log n), n para cada nível da recursão, log n para a quantidade de níveis
     if len(v) <= 1 {
         tamE := len(v)/2
         tamD := len(v) - tamE // restante do vetor
@@ -97,15 +97,24 @@ func MergeSort(v []int) { // O(n log n) Omega(n log n)
     }
 }
 
+func QuickSort(v []int, ini int, fim int) { // O(n^2) Omega(n log n)
+    if ini < fim {
+        iPivot := partition(v, ini, fim)
+        QuickSort(v, ini, iPivot-1)
+        QuickSort(v, iPivot+1, fim)
+    }
+}
+
 func main() {
     //v := make([]int, 100)
     l := []int{5, 3, 4, 1, 2}
-    fmt.Println(l)
+    /* fmt.Println(l)
     MergeSort(l)
-    fmt.Println(l)
+    fmt.Println(l) */
+    QuickSort(l)
     //SelectionSortIP(l)
     //MergeSort(l)
     //BubbleSort(l)
     //InsertionSort(l)
-    //fmt.Println(l)
+    fmt.Println(l)
 }
