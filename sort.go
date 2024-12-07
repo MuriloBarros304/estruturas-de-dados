@@ -78,10 +78,13 @@ func InsertionSort(v []int) { // O(n^2) Omega(n)
     }
 }
 
+// MergeSort ----------------------------------------------
+// Função para unir dois vetores ordenados em um vetor
+// ordenado.
 func Merge(v []int , e []int, d []int) { // O(n) Omega(n)
-    indexE, indexD, indexV := 0, 0, 0
-    for indexE < len(e) && indexD < len(d) {
-        if e[indexE] < d[indexD] {
+    indexE, indexD, indexV := 0, 0, 0        // índices para percorrer os vetores esquerdo, direito e o vetor final
+    for indexE < len(e) && indexD < len(d) { // enquanto estiverem dentro dos limites
+        if e[indexE] < d[indexD] {           // compara os elementos dos vetores da esquerda e direita
             v[indexV] = e[indexE]
             indexE++
         } else {
@@ -127,6 +130,46 @@ func QuickSort(v []int, ini int, fim int) { // O(n^2) Omega(n log n)
         QuickSort(v, iPivot+1, fim)
     }
 }
+
+func partition(v []int, ini int, fim int) int {
+    pivot := v[fim]
+    i := ini - 1
+    for j := ini; j < fim; j++ {
+        if v[j] < pivot {
+            i++
+            v[i], v[j] = v[j], v[i]
+        }
+    }
+    v[i+1], v[fim] = v[fim], v[i+1]
+    return i+1
+}
+
+func CountingSort(v []int) { // O(n+k) Omega(n), k = max - min
+    n := len(v)
+    max := 0
+    for i := 0; i < n; i++ {    // encontra o maior elemento
+        if v[i] > max {
+            max = v[i]
+        }
+    }
+    count := make([]int, max+1) // vetor para contar a quantidade de elementos
+    for i := 0; i < n; i++ {
+        count[v[i]]++
+    }
+    for i := 1; i <= max; i++ { // soma cumulativa
+        count[i] += count[i-1]
+    }
+    sorted := make([]int, n)    // vetor ordenado
+    for i := n-1; i >= 0; i-- {
+        sorted[count[v[i]]-1] = v[i]
+        count[v[i]]--
+    }
+    for i := 0; i < n; i++ {
+        v[i] = sorted[i]
+    }
+}
+
+
 
 func main() {
     //v := make([]int, 100)
