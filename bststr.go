@@ -6,15 +6,15 @@ import (
 
 type BSTNode struct {
     left *BSTNode
-    val int
+    val string
     right *BSTNode
 }
 
-func (node *BSTNode) createNode(val int) *BSTNode {
+func (node *BSTNode) createNode(val string) *BSTNode {
     return &BSTNode{val: val}
 }
 
-func (node *BSTNode) Add(val int) {
+func (node *BSTNode) Add(val string) {
     if val < node.val {
         if node.left != nil{
             node.left.Add(val) 
@@ -30,7 +30,7 @@ func (node *BSTNode) Add(val int) {
     }
 }
 
-func (node *BSTNode) Search(val int) bool {
+func (node *BSTNode) Search(val string) bool {
     if val == node.val {
         return true
     } else if val < node.val {
@@ -48,17 +48,7 @@ func (node *BSTNode) Search(val int) bool {
     }
 }
 
-func (node *BSTNode) InOrderNav() {
-    if node.left != nil {
-        node.left.InOrderNav()
-    }
-    if node.right != nil {
-        node.right.InOrderNav()
-    }
-    fmt.Println(node.val)
-}
-
-func (node *BSTNode) Min() int {
+func (node *BSTNode) Min() string {
     if node.left != nil {
         return node.left.Min()
     } else {
@@ -66,7 +56,7 @@ func (node *BSTNode) Min() int {
     }
 }
 
-func (node *BSTNode) Max() int {
+func (node *BSTNode) Max() string {
     if node.right != nil {
         return node.right.Max()
     } else {
@@ -92,16 +82,48 @@ func (node *BSTNode) Height() int {
     return hr + 1
 }
 
+func (raiz *BSTNode) PreOrderNav() {
+    fmt.Println(raiz.val)
+    if raiz.left != nil {
+        raiz.left.PreOrderNav()
+    }
+    if raiz.right != nil {
+        raiz.right.PreOrderNav()
+    }
+}
+
+func (raiz *BSTNode) InOrderNav() {
+    if raiz != nil {
+        raiz.left.InOrderNav()
+    }
+    fmt.Println(raiz.val)
+    if raiz.right != nil {
+        raiz.right.InOrderNav()
+    }
+}
+
+func (raiz *BSTNode) PostOrderNav() {
+    if raiz.left != nil {
+        raiz.left.PostOrderNav()
+    }
+    if raiz.right != nil {
+        raiz.right.PostOrderNav()
+    }
+    fmt.Println(raiz.val)
+}
+
 func main() {
-    bst := (&BSTNode{}).createNode(10)
-    bst.Add(5)
-    bst.Add(20)
-    bst.Add(15)
-    bst.Add(16)
-    bst.InOrderNav()
-    fmt.Println(bst.Search(16))
-    fmt.Println(bst.Search(1))
-    fmt.Println(bst.Min())
-    fmt.Println(bst.Max())
-    fmt.Println(bst.Height())
+    raiz := createNode("L")
+    raiz.Add("D")
+    raiz.Add("Q")
+    raiz.Add("B")
+    raiz.Add("G")
+    raiz.Add("N")
+    raiz.Add("G")
+    fmt.Println("PreOrderNav")
+    raiz.PreOrderNav()
+    fmt.Println("InOrderNav")
+    raiz.InOrderNav()
+    fmt.Println("PostOrderNav")
+    raiz.PostOrderNav()
 }
