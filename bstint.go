@@ -48,16 +48,6 @@ func (node *BSTNode) Search(val int) bool {
     }
 }
 
-func (node *BSTNode) InOrderNav() {
-    if node.left != nil {
-        node.left.InOrderNav()
-    }
-    if node.right != nil {
-        node.right.InOrderNav()
-    }
-    fmt.Println(node.val)
-}
-
 func (node *BSTNode) Min() int {
     if node.left != nil {
         return node.left.Min()
@@ -122,9 +112,29 @@ func (raiz *BSTNode) PostOrderNav() {
     fmt.Println(raiz.val)
 }
 
+func (node *BSTNode) Remove(val int) *BSTNode {
+    if val < node.val {
+        node.left = node.left.Remove(val)          // reatribui o nó esquerdo, para que o return nil seja passado para o nó pai
+    } else if val > node.val {
+        node.right = node.right.Remove(val)
+    } else {
+        if node.left == nil && node.right == nil { // caso 1: nó folha
+            return nil
+        } else if node.left == nil {               // caso 2: nó com um filho à direita
+            return node.right
+        } else if node.right == nil {              // caso 2: nó com um filho à esquerda
+            return node.left
+        } else {                                   // caso 3: nó com dois filhos
+            min := node.right.Min()                // abordagem 1: encontrar o menor valor do nó à direita
+            node.val = min
+            node.right = node.right.Remove(min)    // remove o nó com o menor valor
+        }
+    }
+    return node
+}
+
 func main() {
-    bst := (&BSTNode{}).createNode(10)
-    alfabeto := (&BSTNode{}).createNode(13)
+    bst := createNode(10)
     bst.Add(5)
     bst.Add(20)
     bst.Add(15)
