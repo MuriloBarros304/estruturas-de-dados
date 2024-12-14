@@ -2,6 +2,7 @@ package main
 import (
     "fmt"
     "math"
+    "math/rand"
 )
 
 // BubbleSort ----------------------------------------------
@@ -81,20 +82,20 @@ func InsertionSort(v []int) { // O(n^2) Omega(n)
 // MergeSort ----------------------------------------------
 // Função para unir dois vetores ordenados em um vetor
 // ordenado.
-func Merge(v []int , e []int, d []int) { // O(n) Omega(n)
+func merge(v []int , e []int, d []int) { // O(n) Omega(n)
     indexE, indexD, indexV := 0, 0, 0        // índices para percorrer os vetores esquerdo, direito e o vetor final
     for indexE < len(e) && indexD < len(d) { // enquanto estiverem dentro dos limites
-        if e[indexE] < d[indexD] {           // compara os elementos dos vetores da esquerda e direita
-            v[indexV] = e[indexE]
-            indexE++
-        } else {
-            v[indexV] = d[indexD]
-            indexD++
+        if e[indexE] < d[indexD] {           // compara os elementos dos vetores da esquerda e direita (se o da esquerda for menor)
+            v[indexV] = e[indexE]            // coloca o elemento da esquerda no vetor v
+            indexE++                         // incrementa o índice da esquerda
+        } else {                             // se o elemento do vetor da direita for menor
+            v[indexV] = d[indexD]            // coloca o elemento da direita no vetor v
+            indexD++                         // incrementa o índice da direita
         }
-        indexV++
+        indexV++                             // incrementa o índice do vetor final, isso se repete até um dos vetores acabar
     }
-    for indexD < len(d) {
-        v[indexV] = d[indexD]
+    for indexD < len(d) {                    // para o caso de um dos vetores ter elementos restantes
+        v[indexV] = d[indexD]                // coloca os elementos restantes no vetor v
         indexD++
         indexV++
     }
@@ -105,10 +106,13 @@ func Merge(v []int , e []int, d []int) { // O(n) Omega(n)
     }
 }
 
+// Função principal do MergeSort, que divide o vetor em
+// dois vetores e chama a função Merge para unir os vetores
+// ordenados. Geralmente é implementado de forma recursiva.
 func MergeSort(v []int) { // O(n log n) Omega(n log n), n para cada nível da recursão, log n para a quantidade de níveis
-    if len(v) <= 1 {
-        tamE := len(v)/2
-        tamD := len(v) - tamE // restante do vetor
+    if len(v) > 1 {             // se o vetor tiver mais de um elemento
+        tamE := len(v) / 2      // vetor da esquerda é a primeira metade
+        tamD := len(v) - tamE   // restante do vetor
         e := make([]int, tamE)
         for i := 0; i < tamE; i++ {
             e[i] = v[i]
@@ -119,31 +123,44 @@ func MergeSort(v []int) { // O(n log n) Omega(n log n), n para cada nível da re
         }
         MergeSort(e)
         MergeSort(d)
-        Merge(v, e, d)
+        merge(v, e, d)
     }
+}
+
+// QuickSort ----------------------------------------------
+// Função para particionar o vetor em relação a um pivô,
+// colocando os elementos menores à esquerda e os maiores
+// à direita. A função retorna a posição do pivô. O pivô
+// é o último elemento do vetor.
+func partition(v []int, ini int, fim int) int { // O(n^2) Omega(n log n)
+    random := rand.Intn(fim-ini) + ini        // sorteia valor entre ini e fim
+    v[fim], v[random] = v[random], v[fim]     // trocar rand de posição com fim
+    indexPivot := fim                         // pega o último elemento como pivô, que foi sorteado
+    pIndex := ini                             // índice de troca
+    for i := ini; i < indexPivot; i++ {       // percorre o vetor
+        if v[i] <= v[indexPivot] {            // se o elemento for menor ou igual ao pivô
+            v[i], v[pIndex] = v[pIndex], v[i] // troca os elementos, colocando os menores à esquerda do pivô e os maiores à direita
+            pIndex++                          // incrementa o índice de troca
+        }
+    }
+    v[pIndex], v[indexPivot] = v[indexPivot], v[pIndex] // coloca o pivô na posição correta
+    return pIndex                                       // retorna a posição do pivô
 }
 
 func QuickSort(v []int, ini int, fim int) { // O(n^2) Omega(n log n)
     if ini < fim {
-        iPivot := partition(v, ini, fim)
-        QuickSort(v, ini, iPivot-1)
-        QuickSort(v, iPivot+1, fim)
+        indexPivot := partition(v, ini, fim) // chama a função partition
+        QuickSort(v, ini, indexPivot-1)      // chama a função recursivamente para a partição da esquerda
+        QuickSort(v, indexPivot+1, fim)      // chama a função recursivamente para a partição da direita
     }
 }
 
-func partition(v []int, ini int, fim int) int {
-    pivot := v[fim]
-    i := ini - 1
-    for j := ini; j < fim; j++ {
-        if v[j] < pivot {
-            i++
-            v[i], v[j] = v[j], v[i]
-        }
-    }
-    v[i+1], v[fim] = v[fim], v[i+1]
-    return i+1
-}
-
+// CountingSort -------------------------------------------
+// Algoritmo para ordenar um vetor de inteiros não negativos
+// em ordem crescente. A função conta a quantidade de
+// elementos e faz uma soma cumulativa. É estável,
+// ou seja, elementos iguais mantêm a ordem relativa.
+// Geralmente é utilizado para ordenar inteiros pequenos.
 func CountingSort(v []int) { // O(n+k) Omega(n), k = max - min
     n := len(v)
     max := 0
@@ -161,7 +178,7 @@ func CountingSort(v []int) { // O(n+k) Omega(n), k = max - min
     }
     sorted := make([]int, n)    // vetor ordenado
     for i := n-1; i >= 0; i-- {
-        sorted[count[v[i]]-1] = v[i]
+        sorted[count[v[i]]-1] = v[i] // shift para a esquerda
         count[v[i]]--
     }
     for i := 0; i < n; i++ {
@@ -169,18 +186,34 @@ func CountingSort(v []int) { // O(n+k) Omega(n), k = max - min
     }
 }
 
-
-
 func main() {
-    //v := make([]int, 100)
-    l := []int{5, 3, 4, 1, 2}
-    /* fmt.Println(l)
-    MergeSort(l)
-    fmt.Println(l) */
-    QuickSort(l)
-    //SelectionSortIP(l)
-    //MergeSort(l)
-    //BubbleSort(l)
-    //InsertionSort(l)
-    fmt.Println(l)
+    v := []int{8, 4, 9, 5, 3, 2, 6, 1}
+    fmt.Println("Desordenado: ", v)
+
+    v = SelectionSortOP(v)
+    fmt.Println("SelectionSortOP: ", v)
+
+    v = []int{8, 4, 9, 5, 3, 2, 6, 1}
+    SelectionSortIP(v)
+    fmt.Println("SelectionSortIP: ", v)
+
+    v = []int{8, 4, 9, 5, 3, 2, 6, 1}
+    BubbleSort(v)
+    fmt.Println("BubbleSort: ", v)
+
+    v = []int{8, 4, 9, 5, 3, 2, 6, 1}
+    InsertionSort(v)
+    fmt.Println("InsertionSort: ", v)
+
+    v = []int{8, 4, 9, 5, 3, 2, 6, 1}
+    MergeSort(v)
+    fmt.Println("MergeSort: ", v)
+
+    v = []int{8, 4, 9, 5, 3, 2, 6, 1}
+    QuickSort(v, 0, len(v)-1)
+    fmt.Println("QuickSort: ", v)
+
+    v = []int{8, 4, 9, 5, 3, 2, 6, 1}
+    CountingSort(v)
+    fmt.Println("CountingSort: ", v)
 }
