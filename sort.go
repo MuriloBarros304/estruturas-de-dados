@@ -131,7 +131,7 @@ func MergeSort(v []int) { // O(n log n) Omega(n log n), n para cada nível da re
 // Função para particionar o vetor em relação a um pivô,
 // colocando os elementos menores à esquerda e os maiores
 // à direita. A função retorna a posição do pivô. O pivô
-// é o último elemento do vetor.
+// é escolhido aleatoriamente.
 func partition(v []int, ini int, fim int) int { // O(n^2) Omega(n log n)
     random := rand.Intn(fim-ini) + ini        // sorteia valor entre ini e fim
     v[fim], v[random] = v[random], v[fim]     // trocar rand de posição com fim
@@ -147,6 +147,9 @@ func partition(v []int, ini int, fim int) int { // O(n^2) Omega(n log n)
     return pIndex                                       // retorna a posição do pivô
 }
 
+// Função principal do QuickSort, que chama a função
+// partition para particionar o vetor e chama a função
+// recursivamente para as partições da esquerda e da direita.
 func QuickSort(v []int, ini int, fim int) { // O(n^2) Omega(n log n)
     if ini < fim {
         indexPivot := partition(v, ini, fim) // chama a função partition
