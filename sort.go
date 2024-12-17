@@ -32,11 +32,12 @@ func BubbleSort(v []int) { // O(n^2) Omega(n)
 // A cada varredura, o menor elemento é colocado na posição
 // correta, ou seja, na primeira posição da partição ordenada.
 // No out of place, o vetor ordenado é criado e o menor 
+// elemento é selecionado e marcado como o maior inteiro.
 func SelectionSortOP(v []int) []int { // O(n^2) Omega(n^2)
     ordenado := make([]int, len(v))                        // vetor ordenado
     for varredura := 1; varredura <= len(v); varredura++ { // percorre o vetor até a última posição
-        iMenor := varredura - 1                            // guarda a posição do menor elemento, inicialmente a varredura        
-        for i:=0; i < len(v); i++{                         // percorre o vetor 
+        iMenor := varredura - 1                            // guarda a posição do menor elemento, inicialmente a varredura - 1
+        for i := 0; i < len(v); i++{                       // percorre o vetor 
             if v[i] < v[iMenor] {                          // se o elemento atual for menor que o menor já armazenado
                 iMenor = i                                 // guarda a posição do menor elemento
             }
@@ -53,9 +54,9 @@ func SelectionSortOP(v []int) []int { // O(n^2) Omega(n^2)
 // Este algoritmo de ordenação é um dos piores, pois faz muitas
 // varreduras e trocas.
 func SelectionSortIP(v []int) { // O(n^2) Omega(n^2) a versão in place é mais eficiente
-    for varredura := 0; varredura < len(v) - 1; varredura++ { // percorre o vetor até a penúltima posição              
-        iMenor := varredura                                   // guarda a posição do menor elemento                
-        for i:=varredura+1; i < len(v); i++{                  // percorre o vetor a partir da posição varredura                                  
+    for varredura := 0; varredura < len(v) - 1; varredura++ { // percorre o vetor até a penúltima posição
+        iMenor := varredura                                   // guarda a posição do menor elemento
+        for i:=varredura+1; i < len(v); i++{                  // percorre o vetor a partir da posição varredura
             if v[i] < v[iMenor] {                             // se o elemento atual for menor que o menor já armazenado
                 iMenor = i                                    // guarda a posição do menor elemento
             }
