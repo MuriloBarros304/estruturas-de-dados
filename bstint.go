@@ -133,6 +133,29 @@ func (node *BSTNode) Remove(val int) *BSTNode {
     return node
 }
 
+func (node *BSTNode) Size() int { // O(n)
+    if node == nil {              // se o nó for nulo
+        return 0
+    }
+    return 1 + node.left.Size() + node.right.Size() // retorna a quantidade de nós
+}
+
+func (node *BSTNode) LevelNav() {
+    var fila []*BSTNode
+    fila = append(fila, node) // adiciona node na fila
+    for len(fila) > 0 {
+        n := fila[0]     // pega o primeiro elemento da fila
+        fmt.Println(n.val)
+        fila = fila[1:]  // remove o primeiro elemento da fila
+        if n.left != nil {
+            fila = append(fila, n.left)
+        }
+        if n.right != nil {
+            fila = append(fila, n.right)
+        }
+    }
+}
+
 func main() {
     raiz := BSTNode{nil, 9, nil}
     raiz.Add(5)

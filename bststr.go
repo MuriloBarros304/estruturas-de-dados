@@ -142,7 +142,7 @@ func (node *BSTNode) Size() int { // O(n)
 
 func (node *BSTNode) LevelNav() {
     var fila []*BSTNode
-    fila = append(fila, node)
+    fila = append(fila, node) // adiciona node na fila
     for len(fila) > 0 {
         n := fila[0]     // pega o primeiro elemento da fila
         fmt.Println(n.val)
@@ -176,7 +176,18 @@ func main() {
 
     /*
             L
-          /   \  
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+            /   \  
         D      Q
       /  \    /  
     B     G  N
