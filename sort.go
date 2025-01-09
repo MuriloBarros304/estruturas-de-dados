@@ -55,8 +55,8 @@ func SelectionSortOP(v []int) []int { // O(n^2) Omega(n^2)
 // varreduras e trocas.
 func SelectionSortIP(v []int) { // O(n^2) Omega(n^2) a versão in place é mais eficiente
     for varredura := 0; varredura < len(v) - 1; varredura++ { // percorre o vetor até a penúltima posição
-        iMenor := varredura                                   // guarda a posição do menor elemento
-        for i:=varredura+1; i < len(v); i++{                  // percorre o vetor a partir da posição varredura
+        iMenor := varredura
+        for i:=varredura+1; i < len(v); i++{                  // percorre o vetor a partir da posição varredura + 1
             if v[i] < v[iMenor] {                             // se o elemento atual for menor que o menor já armazenado
                 iMenor = i                                    // guarda a posição do menor elemento
             }
@@ -116,7 +116,7 @@ func MergeSort(v []int) { // O(n log n) Omega(n log n), n para cada nível da re
         tamD := len(v) - tamE   // restante do vetor
         e := make([]int, tamE)
         for i := 0; i < tamE; i++ {
-            e[i] = v[i]
+            e[i] = v[i]         // preenche o vetor da esquerda
         }
         d := make([]int, tamD)
         for j := tamE; j < len(v); j++ {
