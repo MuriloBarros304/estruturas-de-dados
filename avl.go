@@ -16,20 +16,26 @@ func (root *BSTNode) createNode(val int) *BSTNode { // O(1)
 }
 
 func (root *BSTNode) Add(val int) *BSTNode {
-    if val <= root.val {
+    if root == nil { // Se o nó atual for nulo, crie um novo nó
+        return &BSTNode{val: val}
+    }
+    if val <= root.val { // Adiciona no lado esquerdo
         if root.left != nil {
             root.left = root.left.Add(val)
+        } else {
             root.left = root.createNode(val)
         }
-    } else {
+    } else { // Adiciona no lado direito
         if root.right != nil {
             root.right = root.right.Add(val)
+        } else {
             root.right = root.createNode(val)
         }
     }
-    root.UpdateProperties()
-    return root.Rebalance()
+    root.UpdateProperties() // Atualiza altura e fator de balanceamento
+    return root.Rebalance() // Rebalanceia o nó, se necessário
 }
+
 
 func (root *BSTNode) Remove(val int) *BSTNode {
     if root.val == val {
@@ -121,66 +127,64 @@ func (root *BSTNode) RebalanceRightLeft() *BSTNode {
 
 //funcao para rebalancear um no
 func (root *BSTNode) Rebalance() *BSTNode {
-    if root.bf == -2 { //desbalanceada à esquerda
-            if root.left.bf == -1 || root.left.bf == 0  { // esq-esq ou esq-neutro
-                    return root.RebalanceLeftLeft()
-            } else if root.left.bf == 1 { // esq-dir
-                    return root.RebalanceLeftRight()
-            }
-    } else if root.bf == 2 { //desbalanceada à direita
-            if root.right.bf == -1 || root.right.bf == 0  { // dir-dir ou dir-neutro
-                    return root.RebalanceRightRight()
-            } else if root.right.bf == 1 { //dir-esq
-                    return root.RebalanceRightLeft()
-            }
+    if root.bf == -2 { // desbalanceada à esquerda
+        if root.left.bf == -1 || root.left.bf == 0 { // esq-esq ou esq-neutro
+            return root.RebalanceLeftLeft()
+        } else if root.left.bf == 1 { // esq-dir
+            return root.RebalanceLeftRight()
+        }
+    } else if root.bf == 2 { // desbalanceada à direita
+        if root.right.bf == 1 || root.right.bf == 0 { // dir-dir ou dir-neutro
+            return root.RebalanceRightRight()
+        } else if root.right.bf == -1 { // dir-esq
+            return root.RebalanceRightLeft()
+        }
     }
-    //return root.Rebalance()
+    return root // Caso a árvore já esteja balanceada
 }
+
 
 func (root *BSTNode) max() int {
     return root.right.max()
 }
 
+// Função auxiliar para imprimir a árvore em ordem (in-order traversal)
+func (root *BSTNode) InOrderTraversal() {
+    if root == nil {
+        return
+    }
+    root.left.InOrderTraversal()
+    fmt.Printf("%d ", root.val)
+    root.right.InOrderTraversal()
+}
+
 func main() {
+    fmt.Println("=== Construindo a Árvore AVL ===")
     root := (&BSTNode{}).createNode(10)
-    //root := createNode(10)
-    root = root.Add(5)
-    root = root.Add(15)
-    root = root.Add(3)
-    root = root.Add(7)
-    root = root.Add(13)
-    root = root.Add(17)
-    root = root.Add(2)
-    root = root.Add(4)
-    root = root.Add(6)
-    root = root.Add(8)
-    root = root.Add(12)
-    root = root.Add(14)
-    root = root.Add(16)
-    root = root.Add(18)
-    root = root.Add(1)
-    root = root.Add(9)
-    root = root.Add(11)
-    root = root.Add(19)
-/*     root = root.Remove(1)
-    root = root.Remove(2)
-    root = root.Remove(3)
-    root = root.Remove(4)
-    root = root.Remove(5)
-    root = root.Remove(6)
-    root = root.Remove(7)
-    root = root.Remove(8)
-    root = root.Remove(9)
-    root = root.Remove(10)
-    root = root.Remove(11)
-    root = root.Remove(12)
-    root = root.Remove(13)
-    root = root.Remove(14)
-    root = root.Remove(15)
-    root = root.Remove(16)
-    root = root.Remove(17)
-    root = root.Remove(18)
-    root = root.Remove(19) */
-    fmt.Println(root)
+    
+    // Inserindo valores na árvore
+    valuesToAdd := []int{5, 15, 3, 7, 13, 17, 2, 4, 6, 8, 12, 14, 16, 18, 1, 9, 11, 19}
+    fmt.Println("Adicionando valores:", valuesToAdd)
+    for _, val := range valuesToAdd {
+        root = root.Add(val)
+    }
+
+    fmt.Println("\nÁrvore após as inserções (em ordem):")
+    root.InOrderTraversal()
+    fmt.Println()
+
+    // Removendo alguns valores
+    valuesToRemove := []int{1, 2, 3, 4, 5}
+    fmt.Println("\nRemovendo valores:", valuesToRemove)
+    for _, val := range valuesToRemove {
+        root = root.Remove(val)
+    }
+
+    fmt.Println("\nÁrvore após as remoções (em ordem):")
+    root.InOrderTraversal()
+    fmt.Println()
+
+    // Finalizando
+    fmt.Println("\n=== Programa Finalizado ===")
 }
 
