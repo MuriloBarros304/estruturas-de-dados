@@ -19,41 +19,40 @@ func (root *BSTNode) Add(val int) *BSTNode {
     if root == nil { // Se o nó atual for nulo, crie um novo nó
         return &BSTNode{val: val}
     }
-    if val <= root.val { // Adiciona no lado esquerdo
-        if root.left != nil {
+    if val <= root.val { // Adiciona no lado esquerdo caso o valor seja menor ou igual
+        if root.left != nil { // Se o nó esquerdo não for nulo, adicione o valor ao nó esquerdo
             root.left = root.left.Add(val)
         } else {
-            root.left = root.createNode(val)
+            root.left = root.createNode(val) // Se o nó esquerdo for nulo, crie um novo nó
         }
     } else { // Adiciona no lado direito
-        if root.right != nil {
+        if root.right != nil { // Se o nó direito não for nulo, adicione o valor ao nó direito
             root.right = root.right.Add(val)
         } else {
-            root.right = root.createNode(val)
+            root.right = root.createNode(val) // Se o nó direito for nulo, crie um novo nó
         }
     }
     root.UpdateProperties() // Atualiza altura e fator de balanceamento
     return root.Rebalance() // Rebalanceia o nó, se necessário
 }
 
-
-func (root *BSTNode) Remove(val int) *BSTNode {
-    if root.val == val {
-        if root.left == nil && root.right == nil {
+func (root *BSTNode) Remove(val int) *BSTNode { // O(log n)
+    if root.val == val {                           // Caso o valor seja a raiz
+        if root.left == nil && root.right == nil { // Se a raiz não tiver filhos
             //caso1
-            return nil
-        } else if root.left != nil && root.right == nil {
+            return nil                             // Retorna nulo, pois removemos a raiz
+        } else if root.left != nil && root.right == nil { // Se a raiz tiver um filho à esquerda
             //caso2: esq
-            return root.left
-        } else if root.left == nil && root.right != nil {
+            return root.left                       // Retorna o filho à esquerda, que será a nova raiz
+        } else if root.left == nil && root.right != nil { // Se a raiz tiver um filho à direita
             //caso2: dir
-            return root.right
-        } else {
-            maxLeft := root.left.max()
+            return root.right                      // Retorna o filho à direita, que será a nova raiz
+        } else {                                   // Se a raiz tiver dois filhos
+            maxLeft := root.left.max()             // Encontra o maior valor à esquerda
             root.val = maxLeft
             root.left.Remove(maxLeft)
         }
-    } else if val < root.val {
+    } else if val < root.val {                     // Caso o valor seja menor que a raiz
         if root.left != nil {
             root.left = root.left.Remove(val)
         }
