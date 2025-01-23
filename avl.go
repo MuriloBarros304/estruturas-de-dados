@@ -56,7 +56,7 @@ func (root *BSTNode) Remove(val int) *BSTNode { // O(log n)
         if root.left != nil {
             root.left = root.left.Remove(val)
         }
-    } else {
+    } else {                                       // Caso o valor seja maior que a raiz
         if root.right != nil {
             root.right = root.right.Remove(val)
         }
@@ -66,39 +66,39 @@ func (root *BSTNode) Remove(val int) *BSTNode { // O(log n)
 }
 
 
-func (root *BSTNode) RotRight() *BSTNode {
-    newRoot := root.left
-    root.left = newRoot.right
-    newRoot.right = root
-    root.UpdateProperties()
-    newRoot.UpdateProperties()
-    return newRoot
+func (root *BSTNode) RotRight() *BSTNode { // O(1)
+    newRoot := root.left                   // Armazena o nó esquerdo
+    root.left = newRoot.right              // O nó esquerdo do nó atual é o nó direito do novo nó
+    newRoot.right = root                   // O nó direito do novo nó é o nó atual
+    root.UpdateProperties()                // Atualiza as propriedades do nó atual
+    newRoot.UpdateProperties()             // Atualiza as propriedades do novo nó
+    return newRoot                         // Retorna o novo nó, que agora é a raiz
 }
-func (root *BSTNode) RotLeft() *BSTNode {
-    newRoot := root.right
-    root.right = newRoot.left
-    newRoot.left = root
-    root.UpdateProperties()
-    newRoot.UpdateProperties()
+func (root *BSTNode) RotLeft() *BSTNode {  // O(1)
+    newRoot := root.right                  // Armazena o nó direito
+    root.right = newRoot.left              // O nó direito do nó atual é o nó esquerdo do novo nó
+    newRoot.left = root                    // O nó esquerdo do novo nó é o nó atual
+    root.UpdateProperties()                // Atualiza as propriedades do nó atual
+    newRoot.UpdateProperties()             // Atualiza as propriedades do novo nó
     return newRoot
 }
 
-func (root *BSTNode) UpdateProperties() {
+func (root *BSTNode) UpdateProperties() { // O(1)
     hl := 0
     hr := 0
-    if root.left != nil {
-            hl = root.left.height
+    if root.left != nil {                 // Se o nó esquerdo não for nulo, armazene a altura
+            hl = root.left.height         // do nó esquerdo
     } 
-    if root.right != nil {
-            hr = root.right.height
+    if root.right != nil {                // Se o nó direito não for nulo, armazene a altura
+            hr = root.right.height        // do nó direito
     }
-    root.bf = hr - hl
-    if root.left == nil && root.right == nil {
-            root.height = 0
-    } else if hl > hr {           // altura do filho esquerdo é maior
-            root.height = hl + 1
-    } else {
-            root.height = hr + 1
+    root.bf = hr - hl                     // Calcula o fator de balanceamento
+    if root.left == nil && root.right == nil { // Se o nó não tiver filhos
+            root.height = 0                    // A altura do nó é 0
+    } else if hl > hr {                        // altura do filho esquerdo é maior
+            root.height = hl + 1               // A altura do nó é a altura do filho esquerdo + 1
+    } else {                                   // altura do filho direito é maior
+            root.height = hr +                 // A altura do nó é a altura do filho direito + 1
     }
 }
 
